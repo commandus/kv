@@ -2,29 +2,17 @@
 
 /**
  *  config file consists of lines:
- *  service address, default ws://vega.rcitsakha.ru:8002
- *  login
- *  password
- *  conninfo
+ *  database path
  */
 int parseConfig(
-  std::string &listenAddress,
-  std::string &login,
-  std::string &password,
-  std::string &conninfo,
+  std::string &dbpath,
   const std::string &config
 );
 
 /**
  *  config file consists of lines:
- *  service address, default ws://vega.rcitsakha.ru:8002
- *  login
- *  password
- *  conninfo
+ *  database path
  */
 std::string getConfigString(
-  const std::string &listenAddress,
-  const std::string &login,
-  const std::string &password,
-  const std::string &conninfo
+  std::string &dbpath
 );

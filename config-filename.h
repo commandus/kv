@@ -5,4 +5,6 @@
 
 std::string getDefaultConfigFileName(const std::string &filename);
 
+std::string getDefaultDatabasePath();
+
 #endif

@@ -1,103 +1,38 @@
-# loracli
+# kv
 
+Simple key/value CLI utility.
 
-Клиент LoraWAN
+## How to use
 
+### Get value
 
-## Схема передачи данных с датчиков
+kv KEY
 
-```
-    +--------------+
-    |    Vega API  | РЦИТ
-    +--------------+
-           | 
---------------------------------------------------- ws://vega.rcitsakha.ru:8002
-           | src
-           | rawdata
-    +--------------+                 +--------------+
-    | lora-cli     | <---------------| config file  |
-    +--------------+                 +--------------+
-           |                                                      
-           | 1. list devices                                  +-----------------------+  
-           | 2. last loaded packet# from each device   <------|  eui->lastRecvPacket# |   +-------------------+
-           | 3. load new packets                              |  lora-pq, dbm         |-->| key/value storage |
-           | 4. remember last loaded packet# ---------------->|                       |   +-------------------+
-           |                                                  +-----------------------+
-           +----------------------------------
-           | 
-           | insert into db
-           |
-    +---------------+
-    | psql rawtable |  
-    +---------------+
-           |
---------------------------------------------------- lora-mgr
-           |
-    +---------------+
-    | notify listen | on insert pg_notify
-    +---------------+
-           |
-    +----------------+
-    | type# request  |---------------------------+
-    +----------------+      src, rawdata ->      |
-           |                                     | match proto file by src, rawdata
-    +----------------+      <-type#              |
-    | add type#      |----------------------+    |
-    +----------------+                      |    |
-           | src                            |    | read type# from proto files
-           | rawdata                        |    |
-           | type#                          |    |
-    +--------------+                     +--------------+
-    | gRPC service |                     |  proto files | file system
-    +--------------+                     +--------------+
-           | type#                              |
-           | src                                |
-           | rawdata                            |
---------------------------------------------------- lora-mgr	   
---------------------------------------------------- iridium.ysn.ru
---------------------------------------------------- ??-cli
-           |                                    |
-    +--------------+      type#  ->  +------------------+
-    | gRPC client  |-----------------| Proto file cache |<-- sync cache
-    +--------------+                 +------------------+
-           |                                    |
-    +--------------+                            |
-    | pretty print |----------------------------+
-    +--------------+
-           |
-           o
-           -
-           ^
-```
-## Usage
+### Set value
 
-### Set credentials
+kv KEY VALUE
 
-```
-lora-cli save -u USER -p PASSWORD -h ws://vega.rcitsakha.ru:8002 -v
-/home/andrei/.lora-cli saved successfully.
-```
+### Remove key/value
 
-### Check connection
+kv -d KEY
 
-```
-lora-cli ping
-ws://vega.rcitsakha.ru:8002
-```
+### Empty value
 
-### Get device list
+Set an empty value for the key. The key is not deleted.
 
-Output eui
-```
-lora-cli eui
-7665676173693133
-7665676173683032
-```
+kv -0 KEY
 
+## Options
+
+- -p, --dbpath Set the database path
+- -f, --dbflags Set the flags of the database file. Default 0
+- -m, --dbmode Set the file open mode of the database. Default 0664
+- --starts-with If set, search for all records with a key starting with the specified prefix
+- -c --config FILENAME Set configuration file name
+	
 ## Build
 
-Install dependencies first.
-
+Install liblmdb-dev
 ### Linux
 
 ```
@@ -119,108 +54,15 @@ cpack
 
 ## Third party dependencies
 
-In reason libuwsc depends on libev, and libuwsc/libev does not support in the Windows OS
-(no IOCP in libuwsc implemented), zaphoyd/websocketpp.hpp is used in cmake to build Visual
-Studio solution.
-
-### C++98
-
-For Centos 6(nova.ysn.ru) compatibility
-
-- OpenSSL
+- [libmdbx](https://github.com/leo-yuriev/libmdbx) or
+- lmdb
 - argtable3
 
-- rapidjson
-- (libuwsc)[https://github.com/zhaojh329/libuwsc]
-- libev
-
-### C++11
-
-For Windows compatibility
-
-- OpenSSL
-- argtable3
-
-- nlohmann/json.hpp	
-- websocketpp/websocketpp.hpp
-
-### libev
-
-Linux:
+### libmdbx
 
 ```
-git clone https://github.com/enki/libev.git
-cd libev/
-chmod a+x ./autogen.sh
-./autogen.sh
-./configure
-make
-sudo make install
-```
-
-Windows:
-
-```
-git clone https://github.com/disenone/libev-win
-```
-
-### libuwsc
-
-```
-git clone --recursive https://github.com/zhaojh329/libuwsc.git
-cd libuwsc
-mkdir build && cd build
-cmake ..
-make && sudo make install
-sudo ldconfig
-```
-### Windows
-
-CMakeLists.txt:
-```
-+set(LIBEV_INCLUDE_DIR "D:/s/loracli/libs/include")
-+set(LIBEV_LIBRARY "D:/s/loracli/libs/32/libev_static.lib")
-```
-
-src/CMakeLists.txt:
-```
--add_definitions(-O -Wall -Werror --std=gnu99 -D_GNU_SOURCE)
-+add_definitions(-Wall --std=gnu99 -D_GNU_SOURCE)
-```
-
-#### Add C++ compatibility
-
-- uwsc/buffer.h add type conversion
-- uwsc/uwsc.h add extern C declaration
-
-```
-sudo chmod a+w /usr/local/include/uwsc/buffer.h
-
--uint8_t *p = buffer_put(b, 1);
-+uint8_t *p = (uint8_t*) buffer_put(b, 1);
-```
-
-```
-sudo chmod a+w /usr/local/include/uwsc/uwsc.h
-vi /usr/local/include/uwsc/uwsc.h
-#ifndef _UWSC_H
-#define _UWSC_H
-#ifdef __cplusplus
-extern "C" {
-#endif
-..
-#ifdef __cplusplus
-}
-#endif
-#endif
-```
-
-### OpenSSL
-```
-wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
-tar -xf openssl-1.1.1c.tar.gz
-cd openssl-1.1.1c
-./config
+git clone https://github.com/leo-yuriev/libmdbx.git
+cd libmdbx
 make
 sudo make install
 ```

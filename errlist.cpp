@@ -1,55 +1,19 @@
 #include <string.h>
 #include "errlist.h"
-#define ERR_COUNT 27
+
+#define ERR_COUNT 9
 static const char* errlist[ERR_COUNT] = {
-  ERR_COMMAND_LINE,
-  ERR_LOGIN,
-  ERR_UNAUTHORIZED,
-  ERR_WRONG_CREDENTIALS,
-  ERR_GET_DEVICE,
-  ERR_GET_TRACK,
-  ERR_GET_WATCHER,
-  ERR_GET_RAW_DATA,
-  ERR_SET_DEVICE,
-  ERR_ADD_DEVICE,
-  ERR_RM_DEVICE,
-  ERR_ADD_TRACK,
-  ERR_SELECT,
-  ERR_PG_CONN,
-  ERR_PG_CONNECTION,
-  ERR_PG_CONSUME_INPUT,
-  ERR_PG_RESULT,
-  ERR_PG_WRONG_SOCKET,
-  ERR_PG_CONNECT_POLL,
-  ERR_PG_LISTEN,
-  ERR_PARAMETER_CONNINFO,
-  ERR_WRONG_TYPENO,
-  ERR_WRONG_ERR_CONN,
-  ERR_WRONG_INVALID_JSON,
-  ERR_BAD_STATUS,
-  ERR_WS_ERROR,
-  ERR_WRITE_FILE
+  ERR_COMMAND,
+  ERR_PARSE_COMMAND,
+  ERR_LMDB_TXN_BEGIN,
+  ERR_LMDB_TXN_COMMIT,
+  ERR_LMDB_OPEN,
+  ERR_LMDB_CLOSE,
+  ERR_LMDB_PUT,
+  ERR_LMDB_GET,
+  ERR_NO_MEMORY
 };
 
-#define ERR_GRPC_COUNT 16
-static const char* errGRPClist[ERR_GRPC_COUNT] = {
-  ERR_GRPC_CANCELLED,
-  ERR_GRPC_UNKNOWN,
-  ERR_GRPC_INVALID_ARGUMENT,
-  ERR_GRPC_DEADLINE_EXCEEDED,
-  ERR_GRPC_NOT_FOUND,
-  ERR_GRPC_ALREADY_EXISTS,
-  ERR_GRPC_PERMISSION_DENIED,
-  ERR_GRPC_RESOURCE_EXHAUSTED,
-  ERR_GRPC_FAILED_PRECONDITION,
-  ERR_GRPC_ABORTED,
-  ERR_GRPC_OUT_OF_RANGE,
-  ERR_GRPC_UNIMPLEMENTED,
-  ERR_GRPC_INTERNAL,
-  ERR_GRPC_UNAVAILABLE,
-  ERR_GRPC_DATA_LOSS,
-  ERR_GRPC_UNAUTHENTICATED
-};
 
 const char *strerror_loracli(
   int errcode
@@ -58,8 +22,5 @@ const char *strerror_loracli(
   if ((errcode <= -500) && (errcode >= -500 - ERR_COUNT)) {
     return errlist[-(errcode + 500)];
   }
-  if ((errcode <= ERR_GRPC_COUNT) && (errcode >= 0)) {
-        return errGRPClist[errcode];
-  }
-    return strerror(errcode);
+  return strerror(errcode);
 }
