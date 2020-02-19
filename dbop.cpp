@@ -167,6 +167,21 @@ bool openDb
 	return rc == 0;
 }
 
+/**
+ * @brief Close LMDB database file
+ * @param config pass path, flags, file open mode
+ * @return true- success
+ */
+bool closeDb
+(
+	dbenv *env
+)
+{
+	mdb_dbi_close(env->env, env->dbi);
+	mdb_env_close(env->env);
+	return true;
+}
+
 #define DBG(n) if (verbosity > 3)	LOG(INFO) << "putLog " << n << std::endl;
 
 /**
@@ -191,7 +206,7 @@ int put
 	dbkey.mv_data = value.key.data;
 	MDB_val dbdata;
 	dbdata.mv_size = value.value.length;
-	dbdata.mv_data = value.value.length;;
+	dbdata.mv_data = value.value.data;;
 	r = mdb_put(env->txn, env->dbi, &dbkey, &dbdata, 0);
 	if (r) {
 		if (r == MDB_MAP_FULL) {

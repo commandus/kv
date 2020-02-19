@@ -28,8 +28,8 @@ int main(
 ) {
   
   KvParams params(argc, argv);
-  if (params.error)
-    return params.error;
+  if (params.error())
+    return params.error();
 
   dbenv env(params.path, params.flags, params.mode);
 	if (!openDb(&env)) {
@@ -61,6 +61,7 @@ int main(
       r = rm(&env, kv.key, mo);
       break;
     default:
+      break;
   }
 
 	if (!closeDb(&env)) {

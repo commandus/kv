@@ -122,7 +122,7 @@ int KvParams::parseCmd
 	if (a_db_path->count)
 		path = *a_db_path->sval;
 	else {
-		if (path.empty)
+		if (path.empty())
 			path = DEF_DB_PATH;
 	}
 	char b[PATH_MAX];

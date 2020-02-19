@@ -25,10 +25,11 @@ commonlibs = -L/usr/local/lib
 
 kv_SOURCES = \
 	kv.cpp errlist.cpp kv-params.cpp kv-config.cpp \
+	dbop.cpp \
 	config-filename.cpp \
 	third_party/argtable3/argtable3.c
 
-kv_LDADD = $(commonlibs) -l
+kv_LDADD = $(commonlibs) -lmdbx
 kv_CPPFLAGS = $(commoncppflags)
 
 #
