@@ -18,13 +18,13 @@ bin_PROGRAMS = kv
 nobase_dist_include_HEADERS = \
 	platform.h \
 	third_party/argtable3/argtable3.h \
-	errlist.h \
-	kv-config.h
+	errlist.h log.h \
+	kv-config.h kv-params.h
 
 commonlibs = -L/usr/local/lib 
 
 kv_SOURCES = \
-	kv.cpp errlist.cpp \
+	kv.cpp errlist.cpp kv-params.cpp kv-config.cpp \
 	config-filename.cpp \
 	third_party/argtable3/argtable3.c
 
