@@ -45,6 +45,7 @@ class MatchOptions
 {
 public:
 	int cmp;		///< 0- exact, 1- starts with
+	MatchOptions();
 	MatchOptions(int cmp);
 };
 
