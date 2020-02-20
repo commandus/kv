@@ -19,6 +19,7 @@ bool onread
 	const DbKeyValue &value
 )
 {
+  std::cout << std::string((char *) value.value.data, value.value.length) << std::endl;
   return false;
 }
 

@@ -33,7 +33,14 @@ dbenv::dbenv
 
 }
 
-MatchOptions::MatchOptions(
+MatchOptions::MatchOptions()
+	: cmp(0)
+{
+
+}
+
+MatchOptions::MatchOptions
+(
 	int acmp
 )
 	: cmp(acmp)
@@ -182,7 +189,7 @@ bool closeDb
 	return true;
 }
 
-#define DBG(n) if (verbosity > 3)	LOG(INFO) << "putLog " << n << std::endl;
+#define DBG(n) if (verbosity > 3)	LOG(INFO) << "kv " << n << std::endl;
 
 /**
  * @brief Store input packet to the LMDB
@@ -286,9 +293,9 @@ int get
 		return r;
 	}
 	r = mdb_cursor_get(cursor, &dbkey, &dbval, MDB_SET_RANGE);
-	if (r != MDB_SUCCESS) 
-	{
-		LOG(ERROR) << ERR_LMDB_GET << r << ": " << mdb_strerror(r) << std::endl;
+	if (r != MDB_SUCCESS) {
+		// it's ok
+		// LOG(ERROR) << ERR_LMDB_GET << r << ": " << mdb_strerror(r) << std::endl;
 		mdb_txn_commit(env->txn);
 		return r;
 	}
@@ -306,8 +313,7 @@ int get
 	} while (mdb_cursor_get(cursor, &dbkey, &dbval, MDB_NEXT) == MDB_SUCCESS);
 
 	r = mdb_txn_commit(env->txn);
-	if (r)
-	{
+	if (r) {
 		LOG(ERROR) << ERR_LMDB_TXN_COMMIT << r << ": " << mdb_strerror(r) << std::endl;
 		return ERRCODE_LMDB_TXN_COMMIT;
 	}

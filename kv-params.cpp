@@ -72,7 +72,7 @@ int KvParams::parseCmd
 	struct arg_lit *a_set0 = arg_lit0("0", "empty", "Set value to nothing");
 
 	// 0- exact, 1- starts with
-	struct arg_lit *a_match_starts_with = arg_lit0(NULL, "starts-with", "Key starts with mode.");
+	struct arg_lit *a_match_starts_with = arg_lit0("s", "starts-with", "Key starts with mode.");
 	struct arg_str *a_config_filename = arg_str0("c", "config", "<file name>", "Default configuration file name " CONFIG_FN);
 	// other
 	struct arg_lit *a_verbosity = arg_litn("v", "verbose", 0, 4, "0- quiet (default), 1- errors, 2- warnings, 3- debug, 4- debug libs");
@@ -146,6 +146,8 @@ int KvParams::parseCmd
 
 	if (a_match_starts_with->count)
 		matchMode = 1;
+	else
+		matchMode = 0;
 
 	// special case: '--help' takes precedence over error reporting
 	if ((a_help->count) || nerrors)
