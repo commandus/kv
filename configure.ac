@@ -29,4 +29,7 @@ LDFLAGS="$LDFLAGS -L/usr/local/lib"
 # Checks for header files. Add /usr/local/include for OS X.
 CFLAGS="$CFLAGS -I/usr/local/include"
 
+AC_CHECK_HEADERS([lmdb.h], [], AC_MSG_ERROR([Could not find lmdb.h. Try $ ./configure CFLAGS='-Iyour-lmdb-include-path]))
+AC_CHECK_LIB(lmdb, mdb_env_create, [], AC_MSG_ERROR([Could not find liblmdb. Try $ ./configure LDFLAGS='-Lyour-lmdb-lib-path']))
+
 AC_OUTPUT

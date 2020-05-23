@@ -58,6 +58,11 @@ cpack
 - lmdb
 - argtable3
 
+Install LMDB:
+```
+sudo apt install liblmdb-dev
+```
+
 ### libmdbx
 
 ```

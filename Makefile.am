@@ -13,7 +13,9 @@ else
 # Dynamic library
 # LIB_LMDB=-l lmdb
 # Static library
-LIB_LMDB=/usr/local/lib/liblmdb.a -lpthread
+#LIB_LMDB=/usr/lib/x86_64-linux-gnu/liblmdb.a -lpthread
+# Dynamic library
+LIB_LMDB=-llmdb -lpthread
 OS_CPPFLAGS=-DUSE_LMDB
 endif
 
