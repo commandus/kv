@@ -3,8 +3,9 @@
 
 #include <string>
 
-std::string getDefaultConfigFileName(const std::string &filename);
-
-std::string getDefaultDatabasePath();
+std::string getDefaultConfigFileName(
+    const char *programPath,
+    const std::string &filename
+);
 
 #endif
